@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./components/Home";
 import Movie from "./components/Movie";
@@ -7,7 +7,7 @@ import Favorites from "./components/Favorites";
 import Login from "./components/Login";
 import RequireAuth from "./components/RequireAuth";
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: "/",
     element: <Layout />,
