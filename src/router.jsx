@@ -7,6 +7,8 @@ import Favorites from "./components/Favorites";
 import Login from "./components/Login";
 import RequireAuth from "./components/RequireAuth";
 
+const basename = "/e-commerce";
+
 export const router = createHashRouter([
   {
     path: "/",
@@ -26,7 +28,7 @@ export const router = createHashRouter([
       { path: "login", element: <Login /> },
     ],
   },
-]);
+], { basename: basename });
 
 
 
