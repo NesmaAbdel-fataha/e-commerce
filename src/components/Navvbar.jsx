@@ -1,98 +1,106 @@
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/languageHooks";
 
-
 function Navvbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const favoriteCount = useSelector((state) => state.favorites.items.length);
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
   const { language, setLanguage } = useLanguage();
 
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <Navbar bg="light" data-bs-theme="light" expand="lg">
-      <Container>
-        <Navbar.Brand as={NavLink} to="/">
-          Navbar
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbar-nav" />
-        <Navbar.Collapse id="navbar-nav">
-          <Nav className="me-auto">
+    <nav className="navbar-wrapper">
+      <div className="navbar-inner">
+        <NavLink to="/" className="navbar-brand" onClick={closeMenu}>
+          <span>MovieHub</span>
+        </NavLink>
+
+        <button
+          className="navbar-toggle"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? "✕" : "☰"}
+        </button>
+
+        <div className={`navbar-links ${menuOpen ? "open" : ""}`}>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `navbar-link${isActive ? " active" : ""}`
+            }
+            onClick={closeMenu}
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/movies"
+            className={({ isActive }) =>
+              `navbar-link${isActive ? " active" : ""}`
+            }
+            onClick={closeMenu}
+          >
+            Movies
+          </NavLink>
+          <NavLink
+            to="/favorites"
+            className={({ isActive }) =>
+              `navbar-link${isActive ? " active" : ""}`
+            }
+            onClick={closeMenu}
+          >
+            Favorites
+          </NavLink>
+          {!isAuthenticated ? (
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `navbar-link${isActive ? " active" : ""}`
+              }
+              onClick={closeMenu}
+            >
+              Login
+            </NavLink>
+          ) : (
             <NavLink
               to="/"
-              className={({ isActive }) =>
-                isActive ? "text-danger" : "text-dark"
-              }
+              className="navbar-link"
+              onClick={(e) => {
+                e.preventDefault();
+                closeMenu();
+                logout();
+                navigate("/movies");
+              }}
             >
-              Home
+              Logout
             </NavLink>
-            <NavLink
-              to="/movies"
-              className={({ isActive }) =>
-                isActive ? "text-danger" : "text-dark"
-              }
-            >
-              Movies
-            </NavLink>
-            <NavLink
-              to="/favorites"
-              className={({ isActive }) =>
-                isActive ? "text-danger" : "text-dark"
-              }
-            >
-              Favorites
-            </NavLink>
+          )}
+        </div>
 
-            {!isAuthenticated ? (
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  isActive ? "text-danger" : "text-dark"
-                }
-              >
-                Login
-              </NavLink>
-            ) : (
-              <NavLink
-                to="/"
-                onClick={(e) => {
-                  e.preventDefault();
-                  logout();
-                  navigate("/movies");
-                }}
-                className={({ isActive }) =>
-                  isActive ? "text-danger" : "text-dark"
-                }
-              >
-                Logout
-              </NavLink>
-            )}
-          </Nav>
+        <div className="navbar-right">
+          <select
+            className="navbar-lang-select"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            <option value="en-US">EN</option>
+            <option value="tr-TR">TR</option>
+            <option value="fr-FR">FR</option>
+          </select>
 
-          <div className="d-flex align-items-center gap-3 navbar-actions">
-            <select
-              className="form-select"
-              style={{ width: 140 }}
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-            >
-              <option value="en-US">EN</option>
-              <option value="tr-TR">TR</option>
-              <option value="fr-FR">FR</option>
-            </select>
-
-            <span className="ms-auto navbar-favorites">
-              Favorites: <strong>{favoriteCount}</strong>
-            </span>
-          </div>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+          <NavLink to="/favorites" className="navbar-fav-badge" onClick={closeMenu}>
+            <span>Favorites</span>
+            <span className="navbar-fav-count">{favoriteCount}</span>
+          </NavLink>
+        </div>
+      </div>
+    </nav>
   );
 }
 

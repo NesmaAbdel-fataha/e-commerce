@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toggleFavorite } from "../features/favoritesSlice";
-import Button from "react-bootstrap/Button";
 
 function Favorites() {
   const dispatch = useDispatch();
@@ -10,51 +9,108 @@ function Favorites() {
 
   if (!favorites?.length) {
     return (
-      <div className="container my-4">
-        <h1>Favorites</h1>
-        <p>No favorites yet.</p>
+      <div className="favorites-page">
+        <div className="container">
+          <div className="favorites-empty">
+            <div className="favorites-empty__icon">🎥</div>
+            <h2 className="favorites-empty__title">No favorites yet</h2>
+            <p className="favorites-empty__text">
+              Start exploring movies and add your favorites to see them here.
+            </p>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate("/movies")}
+            >
+              Browse Movies
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container my-4">
-      <h1>Favorites</h1>
+    <div className="favorites-page">
+      <div className="container">
+        <div className="favorites-header">
+          <h1 className="favorites-title">My Favorites</h1>
+          <p className="favorites-subtitle">
+            {favorites.length} movie{favorites.length !== 1 ? "s" : ""} saved
+          </p>
+        </div>
 
-      <div className="row">
-        {favorites.map((movie) => (
-          <div key={movie.id} className="col-md-4" style={{ marginBottom: 20 }}>
-            <div className="card h-100">
-              {movie.poster_path ? (
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  className="card-img-top"
-                  alt={movie.title}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/movies/${movie.id}`)}
-                />
-              ) : null}
-              <div className="card-body">
-                <h5 className="card-title">{movie.title}</h5>
-                <p className="card-text">
-                  {movie.overview ? movie.overview.slice(0, 120) + "..." : ""}
-                </p>
-
-                <div className="d-flex gap-2">
-                  <Button
-                    variant="outline-danger"
-                    className="d-flex align-items-center justify-content-center"
-                    onClick={() => dispatch(toggleFavorite(movie))}
-                    aria-label="Remove favorite"
+        <div className="favorites-grid">
+          {favorites.map((movie) => (
+            <article
+              key={movie.id}
+              className="movie-card"
+              onClick={() => navigate(`/movies/${movie.id}`)}
+            >
+              <div className="movie-card__image-wrap">
+                {movie.vote_average && (
+                  <span className="movie-card__rating-badge">
+                    ★ {movie.vote_average.toFixed(1)}
+                  </span>
+                )}
+                {movie.release_date && (
+                  <span className="movie-card__year">
+                    {movie.release_date.slice(0, 4)}
+                  </span>
+                )}
+                {movie.poster_path ? (
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt={movie.title}
+                    className="movie-card__image"
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      background: "var(--bg-secondary)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "var(--text-muted)",
+                      fontSize: "3rem",
+                    }}
                   >
-                    ❤️
-                  </Button>
-                  <Button onClick={() => navigate(`/movies/${movie.id}`)}>Details</Button>
-                </div>
+                    🎬
+                  </div>
+                )}
+                <div className="movie-card__overlay" />
+                <button
+                  className="movie-card__favorite-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(toggleFavorite(movie));
+                  }}
+                  aria-label="Remove favorite"
+                >
+                  ♥
+                </button>
               </div>
-            </div>
-          </div>
-        ))}
+              <div className="movie-card__body">
+                <h2 className="movie-card__title">{movie.title}</h2>
+                <div className="movie-card__meta">
+                  {movie.release_date && (
+                    <>
+                      <span>{movie.release_date.slice(0, 4)}</span>
+                      <span className="movie-card__meta-dot" />
+                    </>
+                  )}
+                  <span>Movie</span>
+                </div>
+                <p className="movie-card__description">
+                  {movie.overview
+                    ? movie.overview.slice(0, 120) + "..."
+                    : "No description available."}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   );

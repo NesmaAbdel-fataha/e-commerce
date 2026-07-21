@@ -11,17 +11,21 @@ function Home() {
       <section className="home-hero">
         <div className="home-hero__content">
           <span className="home-hero__eyebrow">Welcome back, {name}</span>
-          <h1 className="home-hero__title">A beautiful home for your movie journey</h1>
+          <h1 className="home-hero__title">
+            <span className="home-hero__title-gradient">
+              Your premium movie experience
+            </span>
+          </h1>
           <p className="home-hero__text">
-            Explore curated releases, track favorites, and enjoy a modern responsive
-            experience designed to feel fresh and effortless.
+            Explore curated releases, track your favorites, and enjoy a cinematic
+            experience designed to feel world-class.
           </p>
 
           <div className="home-hero__actions">
-            <Link to="/movies" className="home-button">
+            <Link to="/movies" className="btn btn-primary">
               Browse Movies
             </Link>
-            <a href="#highlights" className="home-link">
+            <a href="#highlights" className="btn btn-secondary">
               View highlights
             </a>
           </div>
@@ -34,7 +38,7 @@ function Home() {
           </article>
           <article className="home-stat-card">
             <strong>Favorites</strong>
-            <span>Save the films you love</span>
+            <span>Save films you love</span>
           </article>
           <article className="home-stat-card">
             <strong>Responsive</strong>
@@ -46,7 +50,7 @@ function Home() {
       <section className="home-highlights" id="highlights">
         <div className="home-highlights__intro">
           <p className="home-section-label">Features</p>
-          <h2>Clean design, smart navigation, and modern card layouts</h2>
+          <h2>Beautiful design, smart navigation, and modern card layouts</h2>
         </div>
 
         <div className="home-feature-grid">
